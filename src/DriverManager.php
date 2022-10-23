@@ -93,6 +93,7 @@ final class DriverManager
         'mysqli'     => Mysqli\Driver::class,
         'sqlsrv'     => SQLSrv\Driver::class,
         'sqlite3'    => SQLite3\Driver::class,
+        'soqol'      => PDO\SoQoL\Driver::class,
     ];
 
     /**
