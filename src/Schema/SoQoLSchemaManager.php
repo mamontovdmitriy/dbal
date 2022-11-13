@@ -184,13 +184,14 @@ SQL;
             $tableColumn['name'] = '';
         }
 
-        $length    = (int) $tableColumn['length'] ?? null;
+        $length    = null;
         $fixed     = false;
         $scale     = 0;
         $precision = null;
 
         $dbType = strtolower($tableColumn['type']);
         $dbType = strtok($dbType, '(), ');
+        assert(is_string($dbType));
 
         $type = $this->platform->getDoctrineTypeMapping($dbType);
 
@@ -205,14 +206,6 @@ SQL;
                 }
                 break;
 
-            case 'smallint':
-            case 'int':
-            case 'integer':
-            case 'bigint':
-            case 'timestamp':
-                $length = null;
-                break;
-
             case 'number':
             case 'decimal':
                 if (preg_match('/[A-Za-z]+\(([0-9]+),\s?([0-9]+)\)/', $tableColumn['type'], $matches) === 1) {
@@ -221,7 +214,6 @@ SQL;
                 } elseif (preg_match('/[A-Za-z]+\(([0-9]+)\)/', $tableColumn['type'], $matches) === 1) {
                     $precision = (int) $matches[1];
                 }
-                $length = null;
                 break;
         }
 
@@ -301,5 +293,11 @@ SQL;
         }
 
         return new Sequence($sequenceName, (int) $sequence['increment_by'], (int) $sequence['start_value']);
+    }
+
+    /** @inheritdoc  */
+    protected function _getPortableTableIndexesList(array $tableIndexes, string $tableName): array
+    {
+        return []; // todo
     }
 }
